@@ -40,16 +40,33 @@ git remote -v
 
 ## 三、同步上游（upstream）
 
+### 何時需要 sync
+
+- **開新 issue branch 之前**：必須 sync，確保從最新的 master 分支出去
+- **在同一個 branch 內持續修改**：不需要
+- **距離上次 sync 已超過幾天**：建議先確認是否落後，再決定是否 sync
+
+### 確認是否落後
+
 ```bash
-# 取得上游最新變更
+# 先 fetch（不會改動任何 branch）
 git fetch upstream
 
+# 查看落後幾個 commit（沒有輸出代表已是最新）
+git log master..upstream/master --oneline
+```
+
+### 執行 sync
+
+```bash
 # 合併上游 master 到本地
 git merge upstream/master
 
 # 推回自己的 fork
 git push origin master
 ```
+
+> 這三步對上游 repo（`istio/istio`）零影響；`push` 目標是 `origin`（個人 fork），不是 `upstream`。
 
 ---
 
