@@ -150,7 +150,19 @@ Branch 名稱、image TAG、upstream issue 三者對應：
 
 ---
 
-## 六、備註
+## 六、練習題目參考
+
+以下為已完整走過 issue branch 流程的練習題目，可作為新手入門或流程複習的參考範本。
+
+| Issue | 說明 | 難度 | 驗證方式 |
+|-------|------|------|----------|
+| [#9 VirtualService catch-all route 截斷後續規則](https://github.com/benchen149/istio-issue-build/issues/9) | `isCatchAllMatch` 只看 Istio API 層，導致 port-only match 被誤判，canary 規則永遠不可達 | ⭐ 低 | `istioctl pc routes` 看 route count |
+
+> 每個題目都包含：upstream fix 來龍去脈、user 情境、dry run、復現、build & verify 的完整步驟，可直接照著手動操作。
+
+---
+
+## 七、備註
 
 - `VERSION` 檔案目前為 `1.31`，build 時會自動附加 `-custom` 後綴
 - 本 repo 為 `istio/istio` 的 fork，upstream 為官方 repo，origin 為個人 fork
