@@ -117,6 +117,40 @@ make push.docker.pilot
 
 ---
 
+## Issue 寫作七段流程
+
+每次開新 practice issue 前，依序填寫以下七段。參考範本：[issue #9](https://github.com/benchen149/istio-issue-build/issues/9)、[issue #10](https://github.com/benchen149/istio-issue-build/issues/10)。
+
+### 段落結構
+
+1. **Upstream 資訊** — 原始 issue/PR 連結、為何選 backport commit（不選 master commit）、fix 大意一段話
+2. **User 情境** — 需求、設定 YAML、bug 如何靜悄悄失效（沒有 error 但行為不對）
+3. **根本原因** — 舊碼位置（`file:line`）、判斷錯在哪、舊 vs 新對照表
+4. **前置作業** — 確認 tag 存在、確認目標檔案穩定、dry run（`--no-commit` 確認無 CONFLICT）
+5. **復現手法** — apply 最小測試資源、驗證指令＋python script 存檔、期望 bug 狀態輸出
+6. **修改過程** — 開 branch → cherry-pick → build → kind load → 替換 istiod → 再次驗證
+7. **修復後 User 建議** — fix 解的是 Istio 自身問題還是 user 設定問題？兩件事分開說
+
+### 選題標準
+
+| 標準 | 確認方式 |
+|------|----------|
+| 目標版本有此 bug | `git log tags/1.13.5..upstream/release-1.13 \| grep <commit>` 有輸出 |
+| 有 backport commit | 優先使用目標版本的 backport，衝突風險最低 |
+| Fix diff 小 | `git show <commit> --stat`，避免大規模重構 |
+| 可用 `istioctl` 驗證 | 想好「修前看什麼 → 修後看什麼」，不依賴流量行為 |
+
+### 常見坑
+
+| 情況 | 正確做法 |
+|------|----------|
+| Multi-line python 指令 | 存 `/tmp/check_xxx.py`，不用 `python3 -c` inline |
+| 改回 stock image 後看不到 bug | 重新 apply 測試資源（清理後需重建） |
+| dry run 後想復原 | `git reset --hard HEAD`，不是 `git cherry-pick --abort` |
+| build 前忘確認 branch | `git branch --show-current` |
+
+---
+
 ## Issue / PR 標題準則
 
 - **一律使用英文**
